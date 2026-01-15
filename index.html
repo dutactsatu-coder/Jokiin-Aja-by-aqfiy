@@ -4,13 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOKIINAJA BY AQFIY | Solusi Tugas & Laporan</title>
+    <title>JOKIINAJA BY AQFIY | Solusi Tugas & Laporan Premium</title>
     <meta name="description" content="Jasa joki tugas profesional untuk Laporan, Laporan Lapangan, Ringkasan, dan PPT dengan harga terjangkau.">
     
+    <!-- Scripts & Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body {
@@ -32,24 +39,237 @@
         .gradient-bg {
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
         }
-        #root { min-height: 100vh; }
+        .nav-scrolled {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
     </style>
-
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "lucide-react": "https://esm.sh/lucide-react@0.460.0",
+    "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
   }
 }
 </script>
 </head>
 <body class="bg-slate-50 text-slate-900 overflow-x-hidden">
     <div id="root"></div>
-    <script type="module" src="index.tsx"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Icons Component Mapping ---
+        const Icon = ({ name, className = "w-6 h-6", size = 24 }) => {
+            const iconRef = useRef(null);
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
+        };
+
+        // --- Constants ---
+        const WHATSAPP_URL = (msg) => `https://wa.me/6282125283598?text=${encodeURIComponent(msg)}`;
+        const INSTAGRAM_URL = "https://www.instagram.com/jokiinaja_byaqfiy?igsh=MTI3Y2dnazU3OHhycg==";
+        
+        const SERVICES = [
+            { id: 'laporan', title: 'Laporan', icon: 'file-text', price: 'Rp 100k-150k', desc: 'Pengerjaan laporan akademis & profesional format rapi.' },
+            { id: 'lapangan', title: 'Laporan Lapangan', icon: 'map', price: 'Rp 150k-200k', desc: 'Dokumentasi observasi detail + jasa cetak opsional.' },
+            { id: 'ringkasan', title: 'Ringkasan', icon: 'list-checks', price: 'Rp 45k-70k', desc: 'Rangkuman materi, buku, atau jurnal padat & jelas.' },
+            { id: 'ppt', title: 'PPT Presentasi', icon: 'presentation', price: 'Rp 40k-70k', desc: 'Desain slide aesthetic & modern untuk presentasi.' }
+        ];
+
+        // --- Components ---
+
+        const Navbar = () => {
+            const [scrolled, setScrolled] = useState(false);
+            const [mobileOpen, setMobileOpen] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'py-3 nav-scrolled' : 'py-5 bg-transparent'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <a href="#" className="flex flex-col leading-none group">
+                            <span className="text-2xl font-black text-indigo-600 tracking-tighter">JOKIINAJA</span>
+                            <span className="text-[10px] font-bold tracking-[0.3em] text-slate-400 group-hover:text-indigo-400 transition-colors uppercase">BY AQFIY</span>
+                        </a>
+                        <div className="hidden md:flex items-center space-x-8">
+                            {['Beranda', 'Layanan', 'Testimoni', 'FAQ'].map(item => (
+                                <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors">{item}</a>
+                            ))}
+                            <a href={WHATSAPP_URL('Halo JOKIINAJA, saya ingin order.')} target="_blank" className="bg-indigo-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition-all active:scale-95">Order Sekarang</a>
+                        </div>
+                        <button className="md:hidden text-slate-600" onClick={() => setMobileOpen(!mobileOpen)}>
+                            <Icon name={mobileOpen ? "x" : "menu"} />
+                        </button>
+                    </div>
+                    {mobileOpen && (
+                        <div className="md:hidden absolute top-full left-0 w-full bg-white border-t p-6 flex flex-col space-y-4 shadow-xl">
+                            {['Beranda', 'Layanan', 'Testimoni', 'FAQ'].map(item => (
+                                <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileOpen(false)} className="text-lg font-bold text-slate-700">{item}</a>
+                            ))}
+                            <a href={WHATSAPP_URL('Halo JOKIINAJA, saya ingin order.')} target="_blank" className="bg-indigo-600 text-white py-4 rounded-2xl text-center font-bold">Order Sekarang</a>
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        const Hero = () => (
+            <section id="beranda" className="pt-32 pb-20 lg:pt-48 lg:pb-32 px-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl -z-10 opacity-50"></div>
+                <div className="max-w-5xl mx-auto text-center">
+                    <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-full mb-8">
+                        <Icon name="sparkles" className="text-indigo-600 w-4 h-4" size={16} />
+                        <span className="text-xs font-bold text-indigo-700 uppercase tracking-widest">Solusi Tugas No. 1</span>
+                    </div>
+                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 mb-6 leading-[1.1]">
+                        Tugas Numpuk? <br/><span className="gradient-text">JOKIINAJA</span> Saja.
+                    </h1>
+                    <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+                        Dikerjakan secara profesional oleh tim berpengalaman. Cepat, akurat, dan rahasia terjamin 100%.
+                    </p>
+                    <div className="flex flex-col sm:flex-row justify-center gap-4">
+                        <a href={WHATSAPP_URL('Halo, saya ingin konsultasi tugas.')} target="_blank" className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-lg shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center justify-center space-x-2">
+                            <span>Mulai Konsultasi</span>
+                            <Icon name="arrow-right" size={20} />
+                        </a>
+                        <a href={INSTAGRAM_URL} target="_blank" className="px-8 py-4 bg-white border border-slate-200 text-slate-700 rounded-full font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+                            <Icon name="instagram" className="text-pink-600" size={20} />
+                            <span>Lihat Testimoni</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Services = () => (
+            <section id="layanan" className="py-24 bg-white px-6">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-indigo-600 font-black tracking-widest uppercase text-sm mb-2">Pilihan Layanan</h2>
+                        <p className="text-3xl md:text-4xl font-black text-slate-900">Apa Yang Kami Kerjakan?</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {SERVICES.map(s => (
+                            <div key={s.id} className="p-8 rounded-[2rem] bg-slate-50 border border-transparent hover:border-indigo-100 hover:bg-white hover:shadow-2xl transition-all group flex flex-col">
+                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm mb-6 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                    <Icon name={s.icon} size={28} />
+                                </div>
+                                <h3 className="text-xl font-bold mb-2">{s.title}</h3>
+                                <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full mb-4 w-fit">{s.price}</span>
+                                <p className="text-slate-500 text-sm leading-relaxed flex-grow">{s.desc}</p>
+                                <a href={WHATSAPP_URL(`Halo, saya ingin order jasa ${s.title}`)} target="_blank" className="mt-6 flex items-center justify-center space-x-2 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-indigo-600 transition-colors">
+                                    <span>Pesan Sekarang</span>
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+
+        const FAQ = () => {
+            const [open, setOpen] = useState(0);
+            const faqs = [
+                { q: "Berapa lama pengerjaannya?", a: "Biasanya 1-3 hari tergantung tingkat kesulitan. Kami juga melayani pengerjaan ekspres (Sameday)." },
+                { q: "Apakah datanya aman?", a: "Sangat aman. Kami menjamin privasi klien 100% dan tidak akan menyebarluaskan file Anda." },
+                { q: "Bisa revisi?", a: "Tentu! Kami memberikan gratis revisi ringan jika hasil belum sesuai instruksi awal." }
+            ];
+            return (
+                <section id="faq" className="py-24 px-6 bg-white">
+                    <div className="max-w-3xl mx-auto">
+                        <div className="text-center mb-12">
+                            <h2 className="text-indigo-600 font-black tracking-widest uppercase text-sm mb-2">FAQ</h2>
+                            <p className="text-3xl font-black text-slate-900">Sering Ditanyakan</p>
+                        </div>
+                        <div className="space-y-4">
+                            {faqs.map((f, i) => (
+                                <div key={i} className="border border-slate-100 rounded-2xl overflow-hidden">
+                                    <button onClick={() => setOpen(open === i ? -1 : i)} className="w-full flex items-center justify-between p-6 text-left font-bold text-slate-800 hover:bg-slate-50 transition-colors">
+                                        <span>{f.q}</span>
+                                        <Icon name={open === i ? "chevron-up" : "chevron-down"} size={20} className="text-indigo-500" />
+                                    </button>
+                                    {open === i && <div className="px-6 pb-6 text-slate-500 leading-relaxed text-sm animate-in fade-in duration-300">{f.a}</div>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="bg-slate-950 text-slate-400 py-16 px-6">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-slate-900 pb-12 mb-8">
+                    <div>
+                        <div className="text-white font-black text-2xl mb-4">JOKIINAJA <span className="text-indigo-500 text-[10px] block tracking-widest font-bold">BY AQFIY</span></div>
+                        <p className="text-sm leading-relaxed mb-6">Partner akademik terpercaya untuk segala jenis laporan dan presentasi mahasiswa seluruh Indonesia.</p>
+                        <div className="flex space-x-4">
+                            <a href={INSTAGRAM_URL} className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-pink-600 transition-colors"><Icon name="instagram" className="text-white" size={18} /></a>
+                            <a href={WHATSAPP_URL('Halo')} className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-green-600 transition-colors"><Icon name="message-circle" className="text-white" size={18} /></a>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-bold mb-6">Menu Cepat</h4>
+                        <ul className="space-y-3 text-sm">
+                            <li><a href="#beranda" className="hover:text-indigo-400 transition-colors">Beranda</a></li>
+                            <li><a href="#layanan" className="hover:text-indigo-400 transition-colors">Layanan</a></li>
+                            <li><a href="#faq" className="hover:text-indigo-400 transition-colors">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="text-white font-bold mb-6">Kontak Kami</h4>
+                        <p className="text-sm mb-4">WhatsApp: +62 821-2528-3598</p>
+                        <p className="text-sm italic">"Kami kerjakan tugasmu, kamu nikmati waktumu."</p>
+                    </div>
+                </div>
+                <div className="text-center text-xs text-slate-600 font-bold">
+                    &copy; {new Date().getFullYear()} JOKIINAJA BY AQFIY. Seluruh Hak Cipta Dilindungi.
+                </div>
+            </footer>
+        );
+
+        const FloatingAction = () => (
+            <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-4">
+                <a href={WHATSAPP_URL('Halo JOKIINAJA, saya ingin order.')} target="_blank" className="w-16 h-16 bg-green-500 text-white rounded-full shadow-2xl flex items-center justify-center animate-float hover:scale-110 transition-transform">
+                    <Icon name="message-square" size={32} />
+                    <span className="absolute right-full mr-4 bg-white text-slate-800 px-4 py-2 rounded-xl text-xs font-bold shadow-xl border whitespace-nowrap hidden md:block">Order Disini!</span>
+                </a>
+            </div>
+        );
+
+        const App = () => (
+            <div className="min-h-screen">
+                <Navbar />
+                <Hero />
+                <Services />
+                <FAQ />
+                <Footer />
+                <FloatingAction />
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
